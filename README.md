@@ -8,6 +8,7 @@
 - Login and SignUp page
 
   - Sign up and sign in screen
+    - Login Form
   - After login --> redirect to browse page
 
 - Browse Page (After Authentication)
@@ -20,3 +21,6 @@
 - Netflix GPT
   - Search bar
   - Movie Suggestions
+
+
+- Formik Library--> forms for react application
