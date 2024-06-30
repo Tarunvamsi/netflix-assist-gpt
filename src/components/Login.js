@@ -7,9 +7,9 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { BGIMAGE_URL, PHOTO_URL, USER_AVTAR } from "../utils/constants";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -18,7 +18,6 @@ const Login = () => {
   const email = useRef(null);
   const password = useRef(null);
   const name = useRef(null);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const toggleSignInForm = () => {
@@ -45,7 +44,7 @@ const Login = () => {
           //display name
           updateProfile(user, {
             displayName: name.current.value,
-            photoURL: "https://avatars.githubusercontent.com/u/85088665?v=4",
+            photoURL: USER_AVTAR,
           })
             .then(() => {
               // dispatch an action , to fix bug for when user sign up for 1st time not diplaying pic and name
@@ -59,14 +58,11 @@ const Login = () => {
                   photoURL: photoURL,
                 })
               );
-              // Profile updated!  as sson as registed , updating name and profile and then navigate
-              navigate("/browse");
+              // Profile updated!  as sson as registed , updating name and profile
             })
             .catch((error) => {
               setErrorMessage(error.message);
             });
-
-          console.log(user);
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -83,8 +79,6 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log(user);
-          navigate("/browse");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -97,10 +91,7 @@ const Login = () => {
     <div>
       <Header />
       <div className="absolute">
-        <img
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/1fd8c6d0-20db-4667-860e-dd1ad7353ac0/10f8d166-7c8c-499a-b16f-57c3740cdeae/IN-en-20240624-popsignuptwoweeks-perspective_alpha_website_small.jpg"
-          alt="logo"
-        />
+        <img src={BGIMAGE_URL} alt="logo" />
       </div>
       <form
         onSubmit={(e) => {
