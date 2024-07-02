@@ -1,4 +1,6 @@
 import React from "react";
+import PlayIcon from "./icons/PlayIcon";
+import InfoCircleIcon from "./icons/InfoCircleIcon";
 
 const VideoTitle = ({ title, overview }) => {
   return (
@@ -7,10 +9,15 @@ const VideoTitle = ({ title, overview }) => {
       <p className="py-6 text-md w-1/4 ">{overview}</p>
       <div className="my-4 ">
         <button className="bg-red-500 text-white p-4 px-10  rounded-lg text-xl opacity-70 hover:bg-opacity-80 ">
-          Play
+          <div className="flex items-center justify-between h-6">
+            <PlayIcon></PlayIcon> Play
+          </div>
         </button>
+
         <button className="mx-2 bg-gray-500 text-white p-4 px-10 text-lg rounded-lg opacity-70 hover:bg-opacity-80 ">
-          More info
+          <div className="flex items-center justify-between h-6">
+            <InfoCircleIcon></InfoCircleIcon> More info
+          </div>
         </button>
       </div>
     </div>
