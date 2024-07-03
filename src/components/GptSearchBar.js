@@ -51,13 +51,14 @@ const GptSearchBar = () => {
   return (
     <div className="pt-[25%] md:pt-[7%] flex flex-col items-center">
       <div className="text-center">
-        <h1 className="text-white text-4xl font-bold mb-4">
-          Let <span className="text-purple-500">AI</span> Be <span className="text-blue-500">Your</span> Movie <span className="text-red-500">Guru</span>
+        <h1 className="text-white text-xl md:text-4xl font-bold mb-4">
+          Let <span className="text-purple-500">AI</span> Be{" "}
+          <span className="text-blue-500">Your</span> Movie{" "}
+          <span className="text-red-500">Guru</span>
         </h1>
         <p className="text-white text-lg italic mb-4 hover:text-green-500">
           Discover the best movies tailored just for you.
         </p>
-        
       </div>
       <form
         className="w-full md:w-1/2 bg-black grid grid-cols-12 rounded-lg"
@@ -78,8 +79,9 @@ const GptSearchBar = () => {
         </button>
       </form>
       <p className="text-white text-sm mb-4 opacity-60 text-center">
-          Get personalized recommendations in seconds. Just type your favorite genres or movies, and let our AI do the magic!
-        </p>
+        Get personalized recommendations in seconds. Just type your favorite
+        genres or movies, and let our AI do the magic!
+      </p>
     </div>
   );
 };
