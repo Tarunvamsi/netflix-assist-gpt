@@ -16,7 +16,7 @@ const SearchBar = () => {
   return (
     <button
       type="submit"
-      className="inline-flex items-center h-10 py-1 px-3 ms-2 mt-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-red-500 focus:ring-1 focus:outline-none focus:ring-white dark:bg-teal-600 dark:hover:bg-red-500 dark:focus:ring-white"
+      className="inline-flex items-center h-10 py-1 px-3 ms-2 mt-2 text-sm font-medium text-white border border-white rounded-lg hover:bg-teal-500 focus:ring-1 focus:outline-none focus:ring-white  dark:hover:bg-teal-500 dark:focus:ring-white "
       onClick={handleGptSearchClick}
     >
       {showGptSearch ? (
@@ -42,7 +42,7 @@ const SearchBar = () => {
               d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
             />
           </svg>
-          GPTSearch
+          Search 
         </>
       )}
     </button>

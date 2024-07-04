@@ -25,4 +25,5 @@ const VideoBackground = ({ movieId, isMuted }) => {
   );
 };
 
+
 export default VideoBackground;

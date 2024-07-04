@@ -24,7 +24,7 @@ const VideoTitle = ({ title, overview, isMuted, toggleMute }) => {
 
         <button
           onClick={toggleMute}
-          className="bg-black opacity-50 text-white py-2 px-4  flex items-center ml-auto rounded-full "
+          className="bg-black opacity-75  hover:opacity-50 text-white py-2 px-4  flex items-center ml-auto rounded-full "
         >
           {isMuted ? <UnmuteIcons /> : <MuteIcon />}
         </button>
