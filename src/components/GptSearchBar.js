@@ -51,7 +51,7 @@ const GptSearchBar = () => {
   return (
     <div className="pt-[25%] md:pt-[7%] flex flex-col items-center">
       <div className="text-center">
-        <h1 className="text-white text-xl md:text-4xl font-bold mb-4">
+        <h1 className="text-white text-2xl md:text-4xl font-bold mb-4">
           Let <span className="text-purple-500">AI</span> Be{" "}
           <span className="text-blue-500">Your</span> Movie{" "}
           <span className="text-red-500">Guru</span>
