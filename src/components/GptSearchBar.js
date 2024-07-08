@@ -37,7 +37,7 @@ const GptSearchBar = () => {
     const prompt =
       "Act as a Movie Recommendation System and Suggest some best movies for the query :" +
       searchText.current.value +
-      ". Only give names of 10 movies, comma seperated. Like the example result ahead. Exmaple Result : yeh jawaani hai deewani, Animal, Kalki 2898 AD, Maharaja, Gaddar, Saaho, Salaar, Bahubali, Jailer, Kantara";
+      ". Only give names of 15 movies, comma seperated. Like the example result ahead. Exmaple Result : yeh jawaani hai deewani, Animal, Kalki 2898 AD, Maharaja, Gaddar, Saaho, Salaar, Bahubali, Jailer, Kantara";
     const gptResult = await openai.generateContent(prompt);
     const response = await gptResult.response;
     const text = await response.text();

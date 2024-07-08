@@ -18,7 +18,7 @@ const GptMovieSuggestion = () => {
   if (!movieNames) return null; //TODO: ERROR PAGE SHOW
 
   return (
-    <div className="p-4 m-4 bg-black text-white opacity-90">
+    <div className="p-4 m-4 bg-black text-white opacity-90 rounded-xl ">
       <div>
         {movieNames.map((movieName, index) => (
           <MovieList
