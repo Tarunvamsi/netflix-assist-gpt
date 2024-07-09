@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { API_OPTIONS } from "../utils/constants";
 import lang from "../utils/languageConstants";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,15 +11,54 @@ const GptSearchBar = () => {
   const searchText = useRef(null);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [loadingTextIndex, setLoadingTextIndex] = useState(0);
 
   const suggestions = [
     "Action-packed Thrillers",
-    "Epic Historical Dramas ",
+    "Epic Historical Dramas",
     "Comedy Blockbusters",
     "Indian Undercover Operations",
     "Fantasy and science fiction",
     "Action & Adventure",
   ];
+
+  // Array of loading text options
+  const loadingTextOptions = ["Loading..⌛", "Connecting..🔗", "Exploring..🔍","Unleashing..🔥","Revealing..🎭"];
+
+  // Function to handle click event
+  const handleGptSearchClick = async () => {
+    setLoading(true);
+    const prompt =
+      "Act as a Movie Recommendation System and Suggest some best movies for the query :" +
+      searchText.current.value +
+      ". Only give names of 15 movies, comma separated. Like the example result ahead. Exmaple Result : yeh jawaani hai deewani, Animal, Kalki 2898 AD, Maharaja, Gaddar, Saaho, Salaar, Bahubali, Jailer, Kantara";
+    const gptResult = await openai.generateContent(prompt);
+    const response = await gptResult.response;
+    const text = await response.text();
+    if (!text) {
+      setLoading(false);
+      return;
+    }
+    console.log("results : ", text);
+    const gptMovies = text.split(","); // converts to array
+
+    const promiseArray = gptMovies.map((movie) => searchMovieTMDB(movie));
+    const tmdbResults = await Promise.all(promiseArray);
+    console.log(tmdbResults);
+    dispatch(
+      addGptMovieResult({ movieNames: gptMovies, movieResults: tmdbResults })
+    );
+    setLoading(false);
+  };
+
+  // Effect to rotate loading text
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLoadingTextIndex((prevIndex) => (prevIndex + 1) % loadingTextOptions.length);
+    }, 1000); // Change the interval as needed
+
+    return () => clearInterval(interval);
+  }, []);
 
   const searchMovieTMDB = async (movie) => {
     const data = await fetch(
@@ -30,31 +69,6 @@ const GptSearchBar = () => {
     );
     const json = await data.json();
     return json.results;
-  };
-
-  const handleGptSearchClick = async () => {
-    setLoading(true);
-    const prompt =
-      "Act as a Movie Recommendation System and Suggest some best movies for the query :" +
-      searchText.current.value +
-      ". Only give names of 15 movies, comma seperated. Like the example result ahead. Exmaple Result : yeh jawaani hai deewani, Animal, Kalki 2898 AD, Maharaja, Gaddar, Saaho, Salaar, Bahubali, Jailer, Kantara";
-    const gptResult = await openai.generateContent(prompt);
-    const response = await gptResult.response;
-    const text = await response.text();
-    if (!text) {
-      setLoading(false);
-      return;
-    }
-    console.log("results : ", text);
-    const gptMovies = text.split(","); //converts to array
-
-    const promiseArray = gptMovies.map((movie) => searchMovieTMDB(movie));
-    const tmdbResults = await Promise.all(promiseArray);
-    console.log(tmdbResults);
-    dispatch(
-      addGptMovieResult({ movieNames: gptMovies, movieResults: tmdbResults })
-    );
-    setLoading(false);
   };
 
   const handleSuggestionClick = (suggestion) => {
@@ -89,7 +103,7 @@ const GptSearchBar = () => {
           onClick={handleGptSearchClick}
           disabled={loading}
         >
-          {loading ? "Loading..." : lang[langKey].search}
+          {loading ? loadingTextOptions[loadingTextIndex] + " " : lang[langKey].search}
         </button>
       </form>
       <p className="text-white text-sm mb-4 opacity-70 text-center">
