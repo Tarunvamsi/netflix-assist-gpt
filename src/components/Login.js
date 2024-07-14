@@ -10,10 +10,12 @@ import { auth } from "../utils/firebase";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { BGIMAGE_URL, PHOTO_URL, USER_AVTAR } from "../utils/constants";
+import ErrorModal from "./ErrorModal";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorMessages, setErrorMessages] = useState([]);
+  const [conditions, setConditions] = useState({});
 
   const email = useRef(null);
   const password = useRef(null);
@@ -23,32 +25,25 @@ const Login = () => {
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
   };
-  const handelButtonClick = () => {
-    //Validate the form data
-    const message = checkValidData(email.current.value, password.current.value);
-    setErrorMessage(message);
 
-    if (message) return;
+  const handelButtonClick = () => {
+    const result = checkValidData(email.current.value, password.current.value, name.current ? name.current.value : null);
+    if (!result.valid) {
+      setErrorMessages([result.message]);
+      setConditions(result.conditions);
+      return;
+    }
 
     if (!isSignInForm) {
-      //signup logic
-      createUserWithEmailAndPassword(
-        auth,
-        email.current.value,
-        password.current.value
-      )
+      createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
         .then((userCredential) => {
-          // Signed up
           const user = userCredential.user;
 
-          //display name
           updateProfile(user, {
             displayName: name.current.value,
             photoURL: USER_AVTAR,
           })
             .then(() => {
-              // dispatch an action , to fix bug for when user sign up for 1st time not diplaying pic and name
-              // we are getting details from auth because by that time user is not updated
               const { uid, email, displayName, photoURL } = auth.currentUser;
               dispatch(
                 addUser({
@@ -58,35 +53,34 @@ const Login = () => {
                   photoURL: photoURL,
                 })
               );
-              // Profile updated!  as sson as registed , updating name and profile
             })
             .catch((error) => {
-              setErrorMessage(error.message);
+              setErrorMessages([error.message]);
             });
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          setErrorMessage(errorCode + "-" + errorMessage);
+          setErrorMessages([`${errorCode} - ${errorMessage}`]);
         });
     } else {
-      //signin logic
-      signInWithEmailAndPassword(
-        auth,
-        email.current.value,
-        password.current.value
-      )
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
         .then((userCredential) => {
-          // Signed in
           const user = userCredential.user;
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          setErrorMessage(errorCode + "-" + errorMessage);
+          setErrorMessages([`${errorCode} - ${errorMessage}`]);
         });
     }
   };
+
+  const closeModal = () => {
+    setErrorMessages([]);
+    setConditions({});
+  };
+
   return (
     <div>
       <Header />
@@ -97,11 +91,9 @@ const Login = () => {
         onSubmit={(e) => {
           e.preventDefault();
         }}
-        className=" absolute p-12 bg-black w-full  md:w-3/12 my-36 mx-auto right-0 left-0 text-white rounded-lg bg-opacity-80 "
+        className="absolute p-12 bg-black w-full md:w-3/12 my-36 mx-auto right-0 left-0 text-white rounded-lg bg-opacity-80"
       >
-        <h1 className="font-bold  text-3xl py-4">
-          {isSignInForm ? "Sign In" : "Sign Up"}
-        </h1>
+        <h1 className="font-bold text-3xl py-4">{isSignInForm ? "Sign In" : "Sign Up"}</h1>
         {!isSignInForm && (
           <input
             ref={name}
@@ -113,8 +105,7 @@ const Login = () => {
         <input
           ref={email}
           type="email"
-          placeholder="Email Address
-          "
+          placeholder="Email Address"
           className="p-2 my-4 w-full bg-gray-800"
         />
         <input
@@ -123,19 +114,17 @@ const Login = () => {
           placeholder="Password"
           className="p-2 my-4 w-full bg-gray-800"
         />
-        <p className="text-red-600 font-bold text-lg p-2 ">{errorMessage}</p>
         <button
-          className="p-4 my-6 bg-red-600  w-full rounded-lg"
+          className="p-4 my-6 bg-red-600 w-full rounded-lg"
           onClick={handelButtonClick}
         >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
         <p className="py-4 cursor-pointer" onClick={toggleSignInForm}>
-          {isSignInForm
-            ? "New to Netflix? SignUp Now"
-            : "Already a user? Login Now"}
+          {isSignInForm ? "New to Netflix? Sign Up Now" : "Already a user? Login Now"}
         </p>
       </form>
+      <ErrorModal show={errorMessages.length > 0} onClose={closeModal} messages={errorMessages} conditions={conditions} />
     </div>
   );
 };
