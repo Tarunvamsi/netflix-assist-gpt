@@ -10,7 +10,7 @@ import { auth } from "../utils/firebase";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { BGIMAGE_URL, PHOTO_URL, USER_AVTAR } from "../utils/constants";
-import ErrorModal from "./ErrorModal";
+import ErrorModal from "./ErrorModal"; // Import the ErrorModal component
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
@@ -27,7 +27,11 @@ const Login = () => {
   };
 
   const handelButtonClick = () => {
-    const result = checkValidData(email.current.value, password.current.value, name.current ? name.current.value : null);
+    const result = checkValidData(
+      email.current.value,
+      password.current.value,
+      name.current ? name.current.value : null
+    );
     if (!result.valid) {
       setErrorMessages([result.message]);
       setConditions(result.conditions);
@@ -35,7 +39,11 @@ const Login = () => {
     }
 
     if (!isSignInForm) {
-      createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
         .then((userCredential) => {
           const user = userCredential.user;
 
@@ -64,14 +72,23 @@ const Login = () => {
           setErrorMessages([`${errorCode} - ${errorMessage}`]);
         });
     } else {
-      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
         .then((userCredential) => {
           const user = userCredential.user;
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          setErrorMessages([`${errorCode} - ${errorMessage}`]);
+
+          if (errorCode === "auth/invalid-credential") {
+            setErrorMessages(["User doesn't exist. Please sign up."]);
+          } else {
+            setErrorMessages([`${errorCode} - ${errorMessage}`]);
+          }
         });
     }
   };
@@ -85,7 +102,11 @@ const Login = () => {
     <div>
       <Header />
       <div className="absolute">
-        <img className="h-screen md:h-full object-cover" src={BGIMAGE_URL} alt="logo" />
+        <img
+          className="h-screen md:h-full object-cover"
+          src={BGIMAGE_URL}
+          alt="logo"
+        />
       </div>
       <form
         onSubmit={(e) => {
@@ -93,7 +114,9 @@ const Login = () => {
         }}
         className="absolute p-12 bg-black w-full md:w-3/12 my-36 mx-auto right-0 left-0 text-white rounded-lg bg-opacity-80"
       >
-        <h1 className="font-bold text-3xl py-4">{isSignInForm ? "Sign In" : "Sign Up"}</h1>
+        <h1 className="font-bold text-3xl py-4">
+          {isSignInForm ? "Sign In" : "Sign Up"}
+        </h1>
         {!isSignInForm && (
           <input
             ref={name}
@@ -121,10 +144,17 @@ const Login = () => {
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
         <p className="py-4 cursor-pointer" onClick={toggleSignInForm}>
-          {isSignInForm ? "New to Netflix? Sign Up Now" : "Already a user? Login Now"}
+          {isSignInForm
+            ? "New to Netflix? Sign Up Now"
+            : "Already a user? Login Now"}
         </p>
       </form>
-      <ErrorModal show={errorMessages.length > 0} onClose={closeModal} messages={errorMessages} conditions={conditions} />
+      <ErrorModal
+        show={errorMessages.length > 0}
+        onClose={closeModal}
+        messages={errorMessages}
+        conditions={conditions}
+      />
     </div>
   );
 };

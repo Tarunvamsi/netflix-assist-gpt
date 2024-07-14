@@ -6,17 +6,19 @@ const ErrorModal = ({ show, onClose, messages, conditions }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-black opacity-85 p-6 rounded-lg shadow-lg w-11/12 md:w-1/3">
-        <h2 className="text-lg font-bold mb-4 text-white flex items-center">
-          <SecurityAlertIcon className="mr-2" />
-          <span> Security Alert !</span>
-        </h2>
+      <div className="bg-black opacity-75 p-6 rounded-lg shadow-lg w-11/12 md:w-1/3">
+        <div className="flex items-center mb-4">
+          <h2 className="text-2xl font-bold text-red-600 flex items-center">
+            <SecurityAlertIcon className="mr-2" />
+             Alert!
+          </h2>
+        </div>
         {messages.map((message, index) => (
-          <p key={index} className="text-lg text-red-600 mb-2">
+          <p key={index} className="text-lg text-white mb-2">
             {message}
           </p>
         ))}
-        {conditions && (
+        {conditions && Object.keys(conditions).length > 0 && (
           <div className="mt-4">
             <p
               className={conditions.length ? "text-green-600" : "text-red-600"}
