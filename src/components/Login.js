@@ -84,8 +84,10 @@ const Login = () => {
           const errorCode = error.code;
           const errorMessage = error.message;
 
-          if (errorCode === "auth/invalid-credential") {
+          if (errorCode === "auth/user-not-found") {
             setErrorMessages(["User doesn't exist. Please sign up."]);
+          } else if (errorCode === "auth/invalid-credential") {
+            setErrorMessages(["Invalid email or password."]);
           } else {
             setErrorMessages([`${errorCode} - ${errorMessage}`]);
           }
